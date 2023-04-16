@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useReducer, useState } from 'react';
-import type { TAppModeValues, TBoard, TRow } from '../types';
+import type { TAppModeValues, TBoard, TRow, TRowAction } from '../types';
 import { generateNumber } from '../utils';
 import { boardReducer, initialBoard } from '../reducer/boardRows.reducer';
 import { APP_MODE, DIFFICULT_MODE, TARGET_NUMBER } from '../constants';
@@ -9,7 +9,12 @@ interface IAppProviderProps {
 }
 
 export interface IAppContext {
+	appMode: TAppModeValues;
+	changeAppMode: (newAppMode: TAppModeValues) => void;
+	targetNumber: string;
+	generateNewTarget: (appMode: TAppModeValues) => void;
 	board: Array<TRow>;
+	dispatchBoard: Dispatch<TRowAction>;
 }
 
 export const AppContext = createContext<IAppContext | null>(null);
@@ -22,7 +27,7 @@ export default function AppProvider({ children }: IAppProviderProps) {
 	const generatedNumber = localStorage.getItem(TARGET_NUMBER) ?? generateNumber(appMode);
 	const [targetNumber, setTargetNumber] = useState(generatedNumber);
 
-	const [board, dispatch] = useReducer(boardReducer, initialBoard);
+	const [board, dispatchBoard] = useReducer(boardReducer, initialBoard);
 
 	const changeAppMode = (newAppMode: TAppModeValues) => {
 		setAppMode(newAppMode);
@@ -40,7 +45,7 @@ export default function AppProvider({ children }: IAppProviderProps) {
 		targetNumber,
 		generateNewTarget,
 		board,
-		dispatch,
+		dispatchBoard,
 	};
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

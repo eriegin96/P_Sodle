@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import Row from './Row';
 import { AppContext, IAppContext, useAppContext } from '../contexts/AppContext';
 import { useContext } from 'react';

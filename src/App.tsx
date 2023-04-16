@@ -3,10 +3,16 @@ import Board from './components/Board';
 import InputBoard from './components/InputBoard';
 import Navbar from './components/Navbar';
 import { KeyboardEvent } from 'react';
+import { useAppContext } from './contexts/AppContext';
+import { BOARD_ACTION } from './constants';
 
 function App() {
+	const { dispatchBoard } = useAppContext();
+
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === 'Enter') console.log(e.key);
+		if (e.key === 'Enter') {
+			// dispatchBoard({ type: BOARD_ACTION.CHECK_ROW , payload });
+		}
 	};
 
 	return (
