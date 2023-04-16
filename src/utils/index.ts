@@ -1,1 +1,1 @@
-export * from './convertNumberToString'
+export * from './generateNumber'

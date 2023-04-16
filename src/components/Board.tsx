@@ -6,11 +6,11 @@ import { useContext } from 'react';
 type Props = {};
 
 export default function Board({}: Props) {
-	const { boardRows } = useAppContext();
+	const { board } = useAppContext();
 
 	return (
 		<Box flexGrow={1}>
-			{boardRows.map((row, index) => (
+			{board.map((row, index) => (
 				<Row key={index} row={row} />
 			))}
 		</Box>

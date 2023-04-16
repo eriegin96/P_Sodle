@@ -1,29 +1,46 @@
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from 'react';
-import { TRow } from '../types';
-import { APP_MODE } from '../constants';
-import { convertNumberToString } from '../utils';
+import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useReducer, useState } from 'react';
+import type { TAppModeValues, TBoard, TRow } from '../types';
+import { generateNumber } from '../utils';
+import { boardReducer, initialBoard } from '../reducer/boardRows.reducer';
+import { APP_MODE, DIFFICULT_MODE, TARGET_NUMBER } from '../constants';
 
 interface IAppProviderProps {
 	children: ReactNode;
 }
 
 export interface IAppContext {
-	boardRows: Array<TRow>;
+	board: Array<TRow>;
 }
 
 export const AppContext = createContext<IAppContext | null>(null);
 
 export default function AppProvider({ children }: IAppProviderProps) {
-	const [appMode, setAppMode] = useState(APP_MODE.NORMAL);
-	const [boardRows, setBoardRows] = useState(['0000']);
-	const targetNumber = convertNumberToString(Math.floor(Math.random() * 9999));
+	const storageAppMode = (localStorage.getItem(DIFFICULT_MODE) as TAppModeValues) ?? APP_MODE.EASY;
+	const [appMode, setAppMode] = useState(storageAppMode);
+	localStorage.setItem(DIFFICULT_MODE, storageAppMode);
+
+	const generatedNumber = localStorage.getItem(TARGET_NUMBER) ?? generateNumber(appMode);
+	const [targetNumber, setTargetNumber] = useState(generatedNumber);
+
+	const [board, dispatch] = useReducer(boardReducer, initialBoard);
+
+	const changeAppMode = (newAppMode: TAppModeValues) => {
+		setAppMode(newAppMode);
+		generateNewTarget(newAppMode);
+	};
+
+	const generateNewTarget = (appMode: TAppModeValues) => {
+		const newTarget = generateNumber(appMode);
+		setTargetNumber(newTarget);
+	};
 
 	const value = {
 		appMode,
-		setAppMode,
+		changeAppMode,
 		targetNumber,
-		boardRows,
-		setBoardRows,
+		generateNewTarget,
+		board,
+		dispatch,
 	};
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

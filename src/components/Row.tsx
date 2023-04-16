@@ -1,5 +1,4 @@
 import { HStack, PinInput, PinInputField } from '@chakra-ui/react';
-import { ChangeEvent } from 'react';
 import { TRow } from '../types';
 
 type IRowProps = {
@@ -7,15 +6,16 @@ type IRowProps = {
 };
 
 export default function Row({ row }: IRowProps) {
-	const handleInputChange = (number: string) => {
-		console.log(number);
-	};
-
 	return (
 		<HStack>
-			<PinInput size='lg' placeholder='' onChange={handleInputChange}>
-				{row.split('').map((_, index) => (
-					<PinInputField key={index} />
+			<PinInput size='lg' placeholder='' variant='outline'>
+				{row.digitArray.map((_, index) => (
+					<PinInputField
+						key={index}
+						color={row.digitCorrect[index] ? 'black' : ''}
+						bgColor={row.digitCorrect[index] ? 'green.400' : ''}
+						sx={{ caretColor: 'transparent' }}
+					/>
 				))}
 			</PinInput>
 		</HStack>
