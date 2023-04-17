@@ -4,6 +4,7 @@ type TAppModeKeys = keyof typeof APP_MODE;
 type TAppModeValues = typeof APP_MODE[TAppModeKeys];
 
 type TRow = {
+	id: string;
 	number: string;
 	digitArray: Array<string>;
 	digitMatch: Array<boolean>;

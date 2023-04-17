@@ -8,11 +8,10 @@ const APP_MODE = Object.freeze({
 });
 
 const BOARD_ACTION = Object.freeze({
-	CHANGE_MODE: 'CHANGE_MODE',
-	CHANGE_TARGET: 'CHANGE_TARGET',
 	ADD_ROW: 'ADD_ROW',
 	EDIT_ROW: 'EDIT_ROW',
 	CHECK_ROW: 'CHECK_ROW',
+	RESET_ROW: 'RESET_ROW',
 });
 
 const DIGIT_AMOUNT = Object.freeze({

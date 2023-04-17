@@ -1,8 +1,9 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useReducer, useState } from 'react';
-import type { TAppModeValues, TBoard, TRow, TRowAction } from '../types';
+import type { TAppModeValues, TRow, TRowAction } from '../types';
 import { generateNumber } from '../utils';
 import { boardReducer, initialBoard } from '../reducer/boardRows.reducer';
-import { APP_MODE, DIFFICULT_MODE, TARGET_NUMBER } from '../constants';
+import { BOARD_ACTION, DIFFICULT_MODE } from '../constants';
+import { getDifficultMode, getTargetNumber } from '../utils/getLocal';
 
 interface IAppProviderProps {
 	children: ReactNode;
@@ -12,30 +13,36 @@ export interface IAppContext {
 	appMode: TAppModeValues;
 	changeAppMode: (newAppMode: TAppModeValues) => void;
 	targetNumber: string;
-	generateNewTarget: (appMode: TAppModeValues) => void;
+	generateNewTarget: () => void;
 	board: Array<TRow>;
 	dispatchBoard: Dispatch<TRowAction>;
+	currentGuess: string;
+	setCurrentGuess: Dispatch<SetStateAction<string>>;
 }
 
 export const AppContext = createContext<IAppContext | null>(null);
 
 export default function AppProvider({ children }: IAppProviderProps) {
-	const storageAppMode = (localStorage.getItem(DIFFICULT_MODE) as TAppModeValues) ?? APP_MODE.EASY;
+	const storageAppMode = getDifficultMode();
 	const [appMode, setAppMode] = useState(storageAppMode);
 	localStorage.setItem(DIFFICULT_MODE, storageAppMode);
 
-	const generatedNumber = localStorage.getItem(TARGET_NUMBER) ?? generateNumber(appMode);
+	const generatedNumber = getTargetNumber();
 	const [targetNumber, setTargetNumber] = useState(generatedNumber);
+
+	const [currentGuess, setCurrentGuess] = useState('');
 
 	const [board, dispatchBoard] = useReducer(boardReducer, initialBoard);
 
 	const changeAppMode = (newAppMode: TAppModeValues) => {
 		setAppMode(newAppMode);
-		generateNewTarget(newAppMode);
+		localStorage.setItem(DIFFICULT_MODE, newAppMode);
+		generateNewTarget();
+		dispatchBoard({ type: BOARD_ACTION.RESET_ROW });
 	};
 
-	const generateNewTarget = (appMode: TAppModeValues) => {
-		const newTarget = generateNumber(appMode);
+	const generateNewTarget = () => {
+		const newTarget = generateNumber();
 		setTargetNumber(newTarget);
 	};
 
@@ -46,6 +53,8 @@ export default function AppProvider({ children }: IAppProviderProps) {
 		generateNewTarget,
 		board,
 		dispatchBoard,
+		currentGuess,
+		setCurrentGuess,
 	};
 
 	return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
