@@ -3,12 +3,13 @@ import { APP_MODE, BOARD_ACTION } from '../constants';
 type TAppModeKeys = keyof typeof APP_MODE;
 type TAppModeValues = typeof APP_MODE[TAppModeKeys];
 
+type TDigitState = 'X' | 'V' | 'O' | null;
+
 type TRow = {
 	id: string;
 	number: string;
 	digitArray: Array<string>;
-	digitMatch: Array<boolean>;
-	digitCorrect: Array<boolean>;
+	digitState: Array<TDigitState>;
 	isCorrect: boolean;
 	isChecked: boolean;
 };

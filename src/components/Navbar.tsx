@@ -61,7 +61,7 @@ export default function Navbar() {
 
 				<Menu>
 					<Tooltip label='Difficulty'>
-						<MenuButton as={IconButton} aria-label='Difficulty' variant='link'>
+						<MenuButton as={IconButton} aria-label='Difficulty' variant='link' sx={{ '& span': { flex: 'unset' } }}>
 							<FiLayers size={20} />
 						</MenuButton>
 					</Tooltip>
