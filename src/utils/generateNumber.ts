@@ -1,8 +1,8 @@
-import { APP_MODE, DIFFICULT_MODE, DIGIT_AMOUNT, MODE_MAX_NUMBER } from '../constants';
-import { TAppModeKeys } from '../types';
+import { DIFFICULTY, DIGIT_AMOUNT, MODE_MAX_NUMBER } from '../constants';
+import { TDifficultyKeys } from '../types';
 import { getDifficultMode } from './getLocal';
 
-const convertNumberToString = (number: string, appMode: TAppModeKeys) => {
+const convertNumberToString = (number: string, appMode: TDifficultyKeys) => {
 	const amountOfDigit = DIGIT_AMOUNT[appMode];
 	const numberOfZero = amountOfDigit - number.length;
 	let targetNumber = number;

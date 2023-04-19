@@ -8,6 +8,7 @@ type Props = {};
 export default function Board({}: Props) {
 	const { board } = useAppContext();
 	const toast = useToast();
+	const isFinished = board.at(-1)?.isCorrect ?? board[0].isCorrect;
 
 	useEffect(() => {
 		if (board.at(-1)?.isCorrect) {
@@ -24,7 +25,7 @@ export default function Board({}: Props) {
 	return (
 		<Box flexGrow={1}>
 			{board.map((row) => (
-				<Row key={row.id} row={row} />
+				<Row key={row.id} row={row} isFinished={isFinished} />
 			))}
 		</Box>
 	);

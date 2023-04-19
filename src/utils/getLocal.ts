@@ -1,9 +1,9 @@
-import { APP_MODE, DIFFICULT_MODE, TARGET_NUMBER } from '../constants';
-import { TAppModeValues } from '../types';
+import { DIFFICULTY, DIFFICULT_MODE, TARGET_NUMBER } from '../constants';
+import { TDifficultyValues } from '../types';
 import { generateNumber } from './generateNumber';
 
 export const getDifficultMode = () => {
-	return (localStorage.getItem(DIFFICULT_MODE) as TAppModeValues) ?? APP_MODE.EASY;
+	return (localStorage.getItem(DIFFICULT_MODE) as TDifficultyValues) ?? DIFFICULTY.EASY;
 };
 
 export const getTargetNumber = () => {

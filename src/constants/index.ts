@@ -1,10 +1,15 @@
 const TARGET_NUMBER = 'target-number';
 const DIFFICULT_MODE = 'difficult-mode';
 
-const APP_MODE = Object.freeze({
+const DIFFICULTY = Object.freeze({
 	EASY: 'EASY',
 	NORMAL: 'NORMAL',
 	HARD: 'HARD',
+});
+
+const APP_MODE = Object.freeze({
+	COLOR: 'COLOR',
+	NUMBER: 'NUMBER',
 });
 
 const BOARD_ACTION = Object.freeze({
@@ -32,4 +37,13 @@ const DIGIT_STATE = Object.freeze({
 	INCORRECT: 'X',
 });
 
-export { TARGET_NUMBER, DIFFICULT_MODE, APP_MODE, BOARD_ACTION, DIGIT_AMOUNT, MODE_MAX_NUMBER, DIGIT_STATE };
+export {
+	TARGET_NUMBER,
+	DIFFICULT_MODE,
+	DIFFICULTY,
+	APP_MODE,
+	BOARD_ACTION,
+	DIGIT_AMOUNT,
+	MODE_MAX_NUMBER,
+	DIGIT_STATE,
+};

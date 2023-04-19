@@ -3,19 +3,20 @@ import Board from './components/Board';
 import Navbar from './components/Navbar';
 import { KeyboardEvent } from 'react';
 import { useAppContext } from './contexts/AppContext';
-import { BOARD_ACTION, DIGIT_AMOUNT } from './constants';
+import { DIGIT_AMOUNT } from './constants';
+import { addRow, checkRow, editRow } from './reducer/boardRows.action';
 
 function App() {
-	const { dispatchBoard, currentGuess, targetNumber, appMode, setCurrentGuess } = useAppContext();
+	const { dispatchBoard, currentGuess, targetNumber, difficulty, setCurrentGuess } = useAppContext();
 
 	const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'Enter') {
-			if (currentGuess.length !== DIGIT_AMOUNT[appMode]) return;
+			if (currentGuess.length !== DIGIT_AMOUNT[difficulty]) return;
 
 			setCurrentGuess('');
-			dispatchBoard({ type: BOARD_ACTION.EDIT_ROW, payload: currentGuess });
-			dispatchBoard({ type: BOARD_ACTION.CHECK_ROW, payload: targetNumber });
-			dispatchBoard({ type: BOARD_ACTION.ADD_ROW });
+			dispatchBoard(editRow(currentGuess));
+			dispatchBoard(checkRow(targetNumber));
+			dispatchBoard(addRow());
 		}
 	};
 

@@ -1,15 +1,18 @@
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useReducer, useState } from 'react';
-import type { TAppModeValues, TRow, TRowAction } from '../types';
+import type { TAppModeValues, TDifficultyValues, TRow, TRowAction } from '../types';
 import { generateNumber } from '../utils';
 import { boardReducer, initialBoard } from '../reducer/boardRows.reducer';
-import { BOARD_ACTION, DIFFICULT_MODE } from '../constants';
+import { APP_MODE, BOARD_ACTION, DIFFICULT_MODE } from '../constants';
 import { getDifficultMode, getTargetNumber } from '../utils/getLocal';
+import { resetRow } from '../reducer/boardRows.action';
 
 interface IAppProviderProps {
 	children: ReactNode;
 }
 
 export interface IAppContext {
+	difficulty: TDifficultyValues;
+	changeDifficulty: (newDifficulty: TDifficultyValues) => void;
 	appMode: TAppModeValues;
 	changeAppMode: (newAppMode: TAppModeValues) => void;
 	targetNumber: string;
@@ -24,8 +27,10 @@ export const AppContext = createContext<IAppContext | null>(null);
 
 export default function AppProvider({ children }: IAppProviderProps) {
 	const storageAppMode = getDifficultMode();
-	const [appMode, setAppMode] = useState(storageAppMode);
+	const [difficulty, setDifficulty] = useState(storageAppMode);
 	localStorage.setItem(DIFFICULT_MODE, storageAppMode);
+
+	const [appMode, setAppMode] = useState<TAppModeValues>(APP_MODE.COLOR);
 
 	const generatedNumber = getTargetNumber();
 	const [targetNumber, setTargetNumber] = useState(generatedNumber);
@@ -34,11 +39,15 @@ export default function AppProvider({ children }: IAppProviderProps) {
 
 	const [board, dispatchBoard] = useReducer(boardReducer, initialBoard);
 
-	const changeAppMode = (newAppMode: TAppModeValues) => {
-		setAppMode(newAppMode);
-		localStorage.setItem(DIFFICULT_MODE, newAppMode);
+	const changeDifficulty = (newDifficulty: TDifficultyValues) => {
+		setDifficulty(newDifficulty);
+		localStorage.setItem(DIFFICULT_MODE, newDifficulty);
 		generateNewTarget();
-		dispatchBoard({ type: BOARD_ACTION.RESET_ROW });
+		dispatchBoard(resetRow());
+	};
+
+	const changeAppMode = (appMode: TAppModeValues) => {
+		setAppMode(appMode);
 	};
 
 	const generateNewTarget = () => {
@@ -47,6 +56,8 @@ export default function AppProvider({ children }: IAppProviderProps) {
 	};
 
 	const value = {
+		difficulty,
+		changeDifficulty,
 		appMode,
 		changeAppMode,
 		targetNumber,

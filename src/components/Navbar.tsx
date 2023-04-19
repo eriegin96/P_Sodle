@@ -17,24 +17,35 @@ import {
 	MenuButton,
 	MenuList,
 	MenuItem,
+	MenuDivider,
 } from '@chakra-ui/react';
 import { FiInfo, FiLayers, FiRefreshCcw } from 'react-icons/fi';
 import { useAppContext } from '../contexts/AppContext';
-import { APP_MODE, BOARD_ACTION } from '../constants';
-import { TAppModeValues } from '../types';
+import { DIFFICULTY, BOARD_ACTION, APP_MODE } from '../constants';
+import { TAppModeValues, TDifficultyValues } from '../types';
 import { useMemo } from 'react';
+import { resetRow } from '../reducer/boardRows.action';
 
-type TMenuItem = { command: string; value: TAppModeValues; text: string };
+type TDifficultyMenuItem = { command: string; value: TDifficultyValues; text: string };
+type TAppModeMenuItem = { command: string; value: TAppModeValues; text: string };
 
 export default function Navbar() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { generateNewTarget, dispatchBoard, appMode, changeAppMode } = useAppContext();
+	const { generateNewTarget, dispatchBoard, difficulty, changeDifficulty, appMode, changeAppMode } = useAppContext();
 
-	const menuItemList: Array<TMenuItem> = useMemo(
+	const difficultyItemList: Array<TDifficultyMenuItem> = useMemo(
 		() => [
-			{ command: appMode === APP_MODE.EASY ? 'X' : '', value: 'EASY', text: 'Easy' },
-			{ command: appMode === APP_MODE.NORMAL ? 'X' : '', value: 'NORMAL', text: 'Normal' },
-			{ command: appMode === APP_MODE.HARD ? 'X' : '', value: 'HARD', text: 'Hard' },
+			{ command: difficulty === DIFFICULTY.EASY ? 'X' : '', value: 'EASY', text: 'Easy' },
+			{ command: difficulty === DIFFICULTY.NORMAL ? 'X' : '', value: 'NORMAL', text: 'Normal' },
+			{ command: difficulty === DIFFICULTY.HARD ? 'X' : '', value: 'HARD', text: 'Hard' },
+		],
+		[difficulty]
+	);
+
+	const modeItemList: Array<TAppModeMenuItem> = useMemo(
+		() => [
+			{ command: appMode === APP_MODE.COLOR ? 'X' : '', value: 'COLOR', text: 'Show colors' },
+			{ command: appMode === APP_MODE.NUMBER ? 'X' : '', value: 'NUMBER', text: 'Show numbers' },
 		],
 		[appMode]
 	);
@@ -43,13 +54,18 @@ export default function Navbar() {
 		onOpen();
 	};
 
+	const handleChangeDifficulty = (mode: TDifficultyValues) => {
+		changeDifficulty(mode);
+	};
+
 	const handleChangeMode = (mode: TAppModeValues) => {
 		changeAppMode(mode);
+		handleNewNumber();
 	};
 
 	const handleNewNumber = () => {
 		generateNewTarget();
-		dispatchBoard({ type: BOARD_ACTION.RESET_ROW });
+		dispatchBoard(resetRow());
 	};
 
 	return (
@@ -66,7 +82,13 @@ export default function Navbar() {
 						</MenuButton>
 					</Tooltip>
 					<MenuList sx={{ minW: 'max-content' }}>
-						{menuItemList.map((item) => (
+						{difficultyItemList.map((item) => (
+							<MenuItem key={item.text} command={item.command} onClick={() => handleChangeDifficulty(item.value)}>
+								{item.text}
+							</MenuItem>
+						))}
+						<MenuDivider />
+						{modeItemList.map((item) => (
 							<MenuItem key={item.text} command={item.command} onClick={() => handleChangeMode(item.value)}>
 								{item.text}
 							</MenuItem>
