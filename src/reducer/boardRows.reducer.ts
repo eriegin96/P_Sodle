@@ -18,7 +18,7 @@ export const initialBoard: Array<TRow> = [
 ];
 
 export const boardReducer = (state: Array<TRow>, action: TRowAction) => {
-	let digitArray, digitState, isCorrect, newRow, isChecked;
+	let digits, digitArray, digitState, isCorrect, newRow, isChecked;
 
 	switch (action.type) {
 		case BOARD_ACTION.EDIT_ROW:
@@ -43,7 +43,15 @@ export const boardReducer = (state: Array<TRow>, action: TRowAction) => {
 
 		case BOARD_ACTION.ADD_ROW:
 			if (state.at(-1)?.isCorrect) return state;
-			newRow = { ...initialBoard[0], id: uuidv4() };
+			digits = DIGIT_AMOUNT[getDifficultMode()];
+			newRow = {
+				id: uuidv4(),
+				number: '',
+				digitArray: new Array(digits).fill(''),
+				digitState: new Array(digits).fill(INCORRECT),
+				isCorrect: false,
+				isChecked: false,
+			};
 			return [...state, newRow];
 
 		case BOARD_ACTION.CHECK_ROW:
@@ -80,7 +88,7 @@ export const boardReducer = (state: Array<TRow>, action: TRowAction) => {
 			return [...state.slice(0, -1), newRow];
 
 		case BOARD_ACTION.RESET_ROW:
-			const digits = DIGIT_AMOUNT[getDifficultMode()];
+			digits = DIGIT_AMOUNT[getDifficultMode()];
 
 			return [
 				{
